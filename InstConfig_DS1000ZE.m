@@ -9,9 +9,9 @@ end
 
 function result = setAquireDepth(instdev, depth)
     cmd = append(':ACQ:MDEP ', num2str(depth));
-    write(instdev, depth);
+    write(instdev, cmd);
     feedback = writeread(instdev, ':ACQ:MDEP?');
-    if (strcmp(depth, feedback))
+    if (strcmp(num2str(depth), feedback))
         result = true;
     else
         result = false;
@@ -21,9 +21,9 @@ end
 %scale must be a number(scientific notation/irrational is availble) instead of string.
 function result = setMainTimebase(instdev, scale)
     write(instdev, ':TIM:MODE MAIN');
-    cmd = append(':TIM[:MAIN]:SCAL ', num2str(scale));
-    write(instdev, depth);
-    feedback = writeread(instdev, ':TIM[:MAIN]:SCAL?');
+    cmd = append(':TIM:MAIN:SCAL ', num2str(scale));
+    write(instdev, cmd);
+    feedback = writeread(instdev, ':TIM:MAIN:SCAL?');
     if (str2double(feedback) == scale)
         result = true;
     else
@@ -34,9 +34,9 @@ end
 %TO BE CONFIRMED: It seems that waveform of a not-enabled channel could be
 %read through :WAV:DATA?
 function result = setChannelStatus(instdev, chan, onoff)
-    cmd = append(':CHAN', num2str(chan), ':RANG ', num2str(double(onoff)));
-    write(instdev, depth);
-    feedback = writeread(instdev, append(':CHAN', num2str(chan), ':RANG?'));
+    cmd = append(':CHAN', num2str(chan), ':DISP ', num2str(double(onoff)));
+    write(instdev, cmd);
+    feedback = writeread(instdev, append(':CHAN', num2str(chan), ':DISP?'));
     if (str2double(feedback) == double(onoff))
         result = true;
     else
@@ -51,7 +51,7 @@ function result = setChannelRange(instdev, chan, range)
     end
 
     cmd = append(':CHAN', num2str(chan), ':RANG ', num2str(range));
-    write(instdev, depth);
+    write(instdev, cmd);
     feedback = writeread(instdev, append(':CHAN', num2str(chan), ':RANG?'));
     if (str2double(feedback) == range)
         result = true;
