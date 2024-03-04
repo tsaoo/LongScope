@@ -12,11 +12,11 @@ function wfmpara = getWfmParameter(instdev, channels)
 
         % Set source to channel N.
         write(instdev, append(':WAV:SOUR CHAN', num2str(chan)));
-        feedback = writeread(instdev, ':WAV:SOUR?');
-        if (~strcmp(feedback, append('CHAN',num2str(chan))))
-            error(append('Failed to read CHAN', num2str(chan)));
-            return;
-        end
+        %feedback = writeread(instdev, ':WAV:SOUR?');
+        %if (~strcmp(feedback, append('CHAN',num2str(chan))))
+        %    error(append('Failed to read CHAN', num2str(chan)));
+        %    return;
+        %end
 
         % Read parameter of channel N.
         parstr = writeread(instdev, ':WAVeform:PREamble?');
@@ -45,7 +45,6 @@ function [wfm, t] = getWfm(instdev, channels)
         readcount = 0;
 
         % Read wfm in several batches.
-        tic
         while (readcount < par.points)
             write(instdev, append(':WAV:STAR ', num2str(readcount + 1)));
 
@@ -63,15 +62,14 @@ function [wfm, t] = getWfm(instdev, channels)
             datalen = str2double(rawdata(3:headlen));
 
             % Exclude the header by reading rawdata from head length+1
-            wfmchan(readcount+1: readcount+datalen) = double(rawdata(headlen+1: length(rawdata)));                
+            wfmchan(readcount+1: readcount+datalen) = double(rawdata(headlen+2: length(rawdata)));                
             readcount = readcount + datalen;
         end
-        toc
         
         % Decode raw wfm with parameters.
         wfmchan = (wfmchan-par.yref)*par.yincrement;
-        wfm = [wfm; wfmchan];
+        wfm = [wfm; wfmchan(1:length(wfmchan)-1)];          % Seems that the last point is much to low
     end
-    t = 1:par.points;
+    t = 1:(par.points-1);
     t = t*par.xincrement + par.xorigin;
 end

@@ -5,6 +5,7 @@ function instconfig = InstConfig_DS1000ZE()
     instconfig.SetMainTimebase = @setMainTimebase;
     instconfig.SetChannelStatus = @setChannelStatus;
     instconfig.SetChennelRange = @setChannelRange;
+    instconfig.SetWaveformMode = @setWaveformMode;
 end
 
 function result = setAquireDepth(instdev, depth)
@@ -54,6 +55,17 @@ function result = setChannelRange(instdev, chan, range)
     write(instdev, cmd);
     feedback = writeread(instdev, append(':CHAN', num2str(chan), ':RANG?'));
     if (str2double(feedback) == range)
+        result = true;
+    else
+        result = false;
+    end
+end
+
+function result = setWaveformMode(instdev, mode)
+    cmd = append(':WAV:MODE ', mode);
+    write(instdev, cmd);
+    feedback = writeread(instdev, ':WAVeform:MODE?');
+    if (strcmp(feedback, mode))             % Must use NORM instead of NORMal
         result = true;
     else
         result = false;

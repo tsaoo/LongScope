@@ -19,7 +19,7 @@ function instdev = InstConnect()
     %configureTerminator(instdev, 'CR/LF'); 
 
     try
-        disp('<strong>Instrument identity:</strong>')
+        disp('<strong>Instrument identity:</strong>');
         disp(writeread(instdev,'*IDN?'));
     catch
         delete(instdev);
