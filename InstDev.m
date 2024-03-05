@@ -34,6 +34,7 @@ classdef InstDev < handle
 
     properties (GetAccess = public, SetAccess = immutable, Abstract)
         channelN
+        memDepth
         acquireDepthLevel
         maxBatch
     end
@@ -66,6 +67,7 @@ classdef InstDev < handle
         setMainTimebase(obj, scale)
         setChannelStatus(obj, chan, onoff)
         setChannelRange(obj, chan, range)
+        setRunStop(obj, runstop)        % 1=RUN/0=STOP
 
         % mode = 1=AUTO/2=NORM/3=SING, chan = 1/2/3..., edge = 1=POS/2=NEG/3=ANY
         setTrigger(obj, mode, chan, edge, level)

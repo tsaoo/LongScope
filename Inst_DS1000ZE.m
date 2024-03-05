@@ -2,7 +2,8 @@ classdef Inst_DS1000ZE < InstDev
 
     properties (GetAccess = public, SetAccess = immutable)
         channelN = 2
-        channelRange
+        memDepth = ["AUTO" 12000 120000 1200000 12000000 24000000;...
+            "AUTO" 6000 60000 600000 6000000 12000000]
         acquireDepthLevel
         maxBatch
     end
@@ -41,14 +42,21 @@ classdef Inst_DS1000ZE < InstDev
             obj.triggerMode = trig.mode;
         end
 
+        function setRunStop(obj, runstop)
+            if (runstop = 1)
+                write(obj.instDev, ':RUN');
+            else
+                write(obj.instDev, ':STOP');
+            end
+        end
+
         function [readback,sucs] = setAcquireDepth(obj, depth)
-            disp('hi')
-            cmd = append(':ACQ:MDEP ', num2str(depth));
+            cmd = append(':ACQ:MDEP ', depth);
             write(obj.instDev, cmd);
 
             readback = writeread(obj.instDev, ':ACQ:MDEP?');
-            readback = str2double(readback);
-            if (readback == depth)
+            readback = erase(readback, newline);
+            if (strcmp(readback, depth))
                 sucs = true;
             else
                 sucs = false;
@@ -144,42 +152,13 @@ classdef Inst_DS1000ZE < InstDev
         end
 
         function [wfm,t] = getWfm(obj, chan)
-            par = obj.getWfmParameter(chan);
-            wfm = zeros(1, par.points);
-            readcount = 0;
-    
-            % Read wfm in several batches.
-            while (readcount < par.points)
-                write(obj.instDev, append(':WAV:STAR ', num2str(readcount + 1)));
-    
-                if (par.points - readcount <= 250000)       % The rest of the data can be read in one batch.
-                    write(obj.instDev, append(':WAV:STOP ', num2str(par.points)));
-                else                                        % The rest of the data is larger than a max batch.
-                    write(obj.instDev, append(':WAV:STOP ', num2str(readcount + 250000)));
-                end
-    
-                rawdata = writeread(obj.instDev, ':WAV:DATA?');
-    
-                % Read the TMC header in each batch.
-                rawdata = str2mat(rawdata);
-                headlen = 2 + str2double(rawdata(2));
-                datalen = str2double(rawdata(3:headlen));
-    
-                % Exclude the header by reading rawdata from head length+1
-                wfm(readcount+1: readcount+datalen) = double(rawdata(headlen+2: length(rawdata)));                
-                readcount = readcount + datalen;
-            end
-            
-            % Decode raw wfm with parameters.
-            wfm = (wfm-par.yRef)*par.yIncrement - par.yOffset;
-            wfm = wfm(1:length(wfm)-1);          % Seems that the last point is much to low
-            t = 1:(par.points-1);
-            t = t*par.xIncrement + par.xOrigin;
+            obj.setWaveformMode('RAW');
+            [wfm,t] = getWfmMem(obj, chan);
         end
-
+       
         function [wfm,t] = getWfmPreview(obj, chan)
-            setWaveformMode(obj, 'NORM');
-            [wfm,t] = getWfm(obj, chan);
+            obj.setWaveformMode('NORM');
+            [wfm,t] = getWfmMem(obj, chan);
         end
         
     end
@@ -246,6 +225,40 @@ classdef Inst_DS1000ZE < InstDev
 
             readback.level = writeread(obj.instDev, 'TRIG:EDG:LEV?');
             readback.level = str2double(readback.level);
+        end
+
+        function [wfm,t] = getWfmMem(obj, chan)
+            par = obj.getWfmParameter(chan);
+            wfm = zeros(1, par.points);
+            readcount = 0;
+    
+            % Read wfm in several batches.
+            while (readcount < par.points)
+                write(obj.instDev, append(':WAV:STAR ', num2str(readcount + 1)));
+    
+                if (par.points - readcount <= 250000)       % The rest of the data can be read in one batch.
+                    write(obj.instDev, append(':WAV:STOP ', num2str(par.points)));
+                else                                        % The rest of the data is larger than a max batch.
+                    write(obj.instDev, append(':WAV:STOP ', num2str(readcount + 250000)));
+                end
+    
+                rawdata = writeread(obj.instDev, ':WAV:DATA?');
+    
+                % Read the TMC header in each batch.
+                rawdata = str2mat(rawdata);
+                headlen = 2 + str2double(rawdata(2));
+                datalen = str2double(rawdata(3:headlen));
+    
+                % Exclude the header by reading rawdata from head length+1
+                wfm(readcount+1: readcount+datalen) = double(rawdata(headlen+2: length(rawdata)));                
+                readcount = readcount + datalen;
+            end
+            
+            % Decode raw wfm with parameters.
+            wfm = (wfm-par.yRef)*par.yIncrement - par.yOffset;
+            wfm = wfm(1:length(wfm)-1);          % Seems that the last point is much to low
+            t = 1:(par.points-1);
+            t = t*par.xIncrement + par.xOrigin;
         end
 
     end
