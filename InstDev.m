@@ -26,6 +26,7 @@ classdef InstDev < handle
         triggerSource
         triggerLevel
         triggerEdge
+        
     end
 
     properties (GetAccess = protected, SetAccess = protected)
