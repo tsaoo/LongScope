@@ -43,7 +43,7 @@ classdef Inst_DS1000ZE < InstDev
         end
 
         function setRunStop(obj, runstop)
-            if (runstop = 1)
+            if (runstop == 1)
                 write(obj.instDev, ':RUN');
             else
                 write(obj.instDev, ':STOP');
