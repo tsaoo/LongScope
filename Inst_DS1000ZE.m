@@ -201,7 +201,9 @@ classdef Inst_DS1000ZE < InstDev
         end
 
         function readback = getTrigger(obj)
-            mode = writeread(obj.instDev, ':TRIG:SWE?');
+            mode = writeread(obj.instDev, ...
+                ...
+                ':TRIG:SWE?');
             if(strncmp(mode, 'AUTO', 4))
                 readback.mode = 1;
             elseif(strncmp(mode, 'NORM', 4))
