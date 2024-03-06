@@ -1,7 +1,7 @@
 classdef Inst_DS1000ZE < InstDev
 
     properties (GetAccess = public, SetAccess = immutable)
-        channelN = 2
+         channelN = 2
         memDepth = ["AUTO" 12000 120000 1200000 12000000 24000000;...
             "AUTO" 6000 60000 600000 6000000 12000000]
         acquireDepthLevel
