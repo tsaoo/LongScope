@@ -1,5 +1,6 @@
 *.asv
 ref/
+tmp/
 Build/
 Include/
 Lib/
