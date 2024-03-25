@@ -1,3 +1,7 @@
 *.asv
 ref/
 Build/
+Include/
+Lib/
+Scripts/
+pyvenv.cfg

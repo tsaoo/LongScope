@@ -2,7 +2,8 @@
 
 - [LongScope - Automatic Measurement Solution](#longscope---automatic-measurement-solution)
   - [简介](#简介)
-  - [环境配置](#环境配置)
+  - [环境配置（开发者）](#环境配置开发者)
+  - [环境配置（非开发者）](#环境配置非开发者)
 
 
 ## 简介
@@ -16,14 +17,31 @@ LongScope用于示波器的自动化或远程测量。程序由MATLAB和Python�
 
 LongScope是面对对象的，每种仪器的方法封装在仪器型号对应的类中，这些类继承自一个统一的抽象类InstDev，抽象类规定了每种仪器必须实现的方法（例如波形读取）以及必须维护的属性（例如当前的触发电平）。虽然每种仪器使用的命令格式可能不同，不同仪器类的方法是以相同格式调用的，各种属性也以相同格式存储。因此，与仪器的通信对于应用层（LongScope的GUI或其它用户程序）是透明的。
 
-## 环境配置
+## 环境配置（开发者）
 
 1. **下载LongScope**
 
-    现阶段推荐直接pull。如果不参与LongScope开发，可以下载Release中的安装包，这样不需要安装Matlab工具箱，但仍需要pip安装pyvisa。
+        git clone https://github.com/Pieski/LongScope.git
 
-2. **安装pyvisa** [![Static Badge](https://img.shields.io/badge/Github-pyvisa-blue)](https://github.com/pyvisa/pyvisa)
+2. **配置虚拟环境** *(Recommended)*
 
-        $ pip install pyvisa
+        python -m venv .
+        ./Scripts/activate
 
-3. **安装Matlab Instrument Control Toolbox**
+3. **安装环境** 
+   
+    [![Static Badge](https://img.shields.io/badge/Github-pyvisa-blue)](https://github.com/pyvisa/pyvisa)
+    [![Static Badge](https://img.shields.io/badge/Github-numpy-green)](https://github.com/numpy/numpy)
+    [![Static Badge](https://img.shields.io/badge/PyPI-PyQt-blue)](https://pypi.org/project/PyQt6/)
+
+        pip install -r ./requirements.txt
+
+4. **安装Matlab Instrument Control Toolbox**
+   
+## 环境配置（非开发者）
+
+**现阶段建议所有用户按上述开发者方法下载并配置LongScope，因为Matlab和Python程序的封装都尚未完成。**
+
+1. **下载LongScope**
+
+    在Github Releases中找到最新版本的安装文件（非Source code.zip）

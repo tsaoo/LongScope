@@ -1,0 +1,4 @@
+numpy==1.26.4
+pyqt6-tools==6.4.2.3.3
+PyVISA==1.14.1
+PyVISA-py==0.7.2
