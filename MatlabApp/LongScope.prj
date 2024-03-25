@@ -1,11 +1,11 @@
 <deployment-project plugin="plugin.ezdeploy" plugin-version="1.0">
-  <configuration build-checksum="1830054946" file="D:\Projects\LongScope\GUI\LongScope.prj" location="D:\Projects\LongScope\GUI" name="LongScope" preferred-package-location="D:\Projects\LongScope\Build\for_redistribution" preferred-package-type="package.type.exe" target="target.ezdeploy.standalone" target-name="Application Compiler">
+  <configuration build-checksum="1830054946" file="D:\Projects\LongScope\MatlabApp\LongScope.prj" location="D:\Projects\LongScope\MatlabApp" name="LongScope" preferred-package-location="D:\Projects\LongScope\Build\for_redistribution" preferred-package-type="package.type.exe" target="target.ezdeploy.standalone" target-name="Application Compiler">
     <param.appname>LongScope</param.appname>
     <param.icon />
     <param.icons />
-    <param.version>1.0</param.version>
+    <param.version>1.1</param.version>
     <param.authnamewatermark>Pieski</param.authnamewatermark>
-    <param.email />
+    <param.email>tsaozy@zju.edu.cn</param.email>
     <param.company />
     <param.summary />
     <param.description />
@@ -45,8 +45,6 @@
     <unset>
       <param.icon />
       <param.icons />
-      <param.version />
-      <param.email />
       <param.company />
       <param.summary />
       <param.description />
@@ -77,13 +75,13 @@
       <file>${PROJECT_ROOT}\ScopeWindow.mlapp</file>
     </fileset.main>
     <fileset.resources>
-      <file>D:\Projects\LongScope\VISAList.py</file>
+      <file>${PROJECT_ROOT}\VISAList.py</file>
     </fileset.resources>
     <fileset.package />
     <fileset.depfun>
+      <file>${PROJECT_ROOT}\Inst_DS1000ZE.m</file>
+      <file>${PROJECT_ROOT}\InstDev.m</file>
       <file>${PROJECT_ROOT}\recordCSV.m</file>
-      <file>D:\Projects\LongScope\Inst_DS1000ZE.m</file>
-      <file>D:\Projects\LongScope\InstDev.m</file>
     </fileset.depfun>
     <build-deliverables>
       <file location="D:\Projects\LongScope\Build\for_testing" name="splash.png" optional="false">D:\Projects\LongScope\Build\for_testing\splash.png</file>
@@ -92,7 +90,7 @@
     </build-deliverables>
     <workflow />
     <matlab>
-      <root>E:\MATLAB\R2023a</root>
+      <root>E:\MATLAB\R2024a</root>
       <toolboxes>
         <toolbox name="fixedpoint" />
       </toolboxes>
