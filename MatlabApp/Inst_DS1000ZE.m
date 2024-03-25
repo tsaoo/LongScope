@@ -258,7 +258,7 @@ classdef Inst_DS1000ZE < InstDev
             
             % Decode raw wfm with parameters.
             wfm = (wfm-par.yRef)*par.yIncrement - par.yOffset;
-            wfm = wfm(1:length(wfm)-1);          % Seems that the last point is much to low
+            wfm = wfm(1:length(wfm)-1);          % Seems that the last point is much too low
             t = 1:(par.points-1);
             t = t*par.xIncrement + par.xOrigin;
         end
